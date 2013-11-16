@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -23,7 +24,9 @@ public class Tank
 	private BombShell bombShell;
 	private Boolean fired;
 	private float speedX, speedY, bombX, bombY, direction;
+	private Circle bullet;
 	private Wind wind;
+	private Boolean alreadyDestroyed;
 	
 	public Tank(Input input)
 	{
@@ -50,6 +53,10 @@ public class Tank
 		this.direction = canon.getAngle();
 		this.wind = new Wind();
 		this.wind.init();
+		System.out.println("force wind : " + this.wind.getForce());
+		this.bombShell.fire(bombX, bombY);
+		this.bullet = bombShell.getBound();
+		this.alreadyDestroyed = new Boolean(false);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException
@@ -103,22 +110,14 @@ public class Tank
 			}
 		}
 		
-		else if (input.isKeyDown(Keyboard.KEY_R))
-		{
-			this.fired = false;
-			this.noRepeat = false;
-			this.wind.init();
-			System.out.println("force wind : " + this.wind.getForce());
-			
-		}
-		
 		else if ((input.isKeyDown(Keyboard.KEY_SPACE))&&(this.noRepeat==false))
 		{
 			this.noRepeat=true;
+			this.alreadyDestroyed = false;
 			System.out.println("Fire at " + canon.getAngle() + " degrees");
 			this.bombX = this.x+11;
 			this.bombY = this.y-2;
-			bombShell.fire(this.bombX,this.bombY);
+			this.bombShell.fire(this.bombX,this.bombY);
 			this.speedX=4;
 			this.speedY=4;
 			this.direction=canon.getAngle();
@@ -143,7 +142,13 @@ public class Tank
 			bombShell.setY(-speedY*Math.sin(this.direction*0.0174532925));
 			bombShell.setX(speedX*Math.cos(this.direction*0.0174532925));
 			bombShell.update();
-			bombShell.render(g);
+			
+			this.bullet = bombShell.getBound();
+			
+			if(this.bombShell.alive()==true || this.bombShell.play()==true)
+			{
+				bombShell.render(g);
+			}
 		}
 		
 	}
@@ -161,6 +166,30 @@ public class Tank
 	public void parachute() 
 	{
 		this.parachute = false;
+	}
+	
+	public Circle getBullet()
+	{
+		return this.bullet;
+	}
+
+	public void setBombDestroyed() throws SlickException 
+	{
+		if(this.alreadyDestroyed==false)
+		{
+			this.bombShell.destroy();
+			//this.fired = false;
+			this.noRepeat = false;
+			this.speedX = 0;
+			this.speedY= 0;
+			this.wind.init();
+			System.out.println("force wind : " + this.wind.getForce());
+			this.bombX = bombShell.getX();
+			this.bombY = bombShell.getY();
+			//this.bombShell.fire(this.bombX, this.bombY);
+			this.bullet = bombShell.getBound();
+		}
+		this.alreadyDestroyed = true;
 	}
 	
 

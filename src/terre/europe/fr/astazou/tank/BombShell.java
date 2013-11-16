@@ -13,10 +13,13 @@ public class BombShell
 	private float x,y;
 	private SpriteSheet explosionSheet;
 	private Animation explosion;
-	private Boolean alive;
+	private Boolean alive = false;
+	private Boolean play = false;
+	private int count = 0;
 	
 	public BombShell()
 	{
+		bomb = new Circle(x, y, 2);
 	}
 	
 	public void fire(float x, float y) throws SlickException
@@ -24,17 +27,40 @@ public class BombShell
 		this.x = x;
 		this.y = y;
 		this.alive = true;
-		bomb = new Circle(x, y, 2);
+		this.play = false;
+		bomb.setRadius(2);
+		bomb.setX(this.x);
+		bomb.setY(this.y);
+		this.count = 0;
 	}
 	
 	public void render(Graphics g)
 	{
 		g.setColor(Color.black);
 		g.fill(bomb);
-		if(this.alive==true)
+		
+		if(this.count>=20)
 		{
-			g.draw(bomb);
+			this.play = false;
 		}
+		
+	    if(this.play==true)  
+        {  
+	    	this.count++;
+            if(this.explosion.getFrame()>=7)
+            {  
+    	    	this.explosion.restart();
+            }  
+            if(this.explosion.getFrame()==0)
+            {
+            	play=true;
+            }   
+            if(this.play==true)
+            {
+            	explosion.draw(this.x-20,this.y-20);
+            }  
+
+        } 
 		
 	}
 	
@@ -70,13 +96,48 @@ public class BombShell
 	
 	public void createAnimation() throws SlickException  
     {  
-         explosionSheet = new SpriteSheet("pics/explosion2.png", 40,40);   
+         explosionSheet = new SpriteSheet("pics/explosion.png", 40,40);   
          explosion = new Animation( explosionSheet, 0,0,1,1,false, 50, true);  
          for (int i=0;i < 2;i++)  
-             {  
-                 for (int j=0;j < 4;j++)  
-                 {explosion.addFrame( explosionSheet.getSprite(j,i),100);}  
-     }  
-         explosion.stopAt(7);  
+         {  
+             for (int j=0;j < 4;j++)  
+             {
+            	 explosion.addFrame( explosionSheet.getSprite(j,i),100);
+             }  
+         }  
+     	this.alive = false;
+         explosion.stopAt(7); 
     } 
+	
+	
+	public void destroy() throws SlickException
+	{
+		bomb.setRadius(0);
+		this.play = true;
+		createAnimation();
+	}
+	
+	public Boolean play()
+	{
+		if(this.play == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	public Boolean alive()
+	{
+		if(this.alive == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

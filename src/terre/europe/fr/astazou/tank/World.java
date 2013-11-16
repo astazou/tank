@@ -13,6 +13,7 @@ public class World
 {
 	private Image background;
 	private Rectangle ground;
+	private Rectangle border;
 	
 	public World(){}
 	
@@ -20,6 +21,7 @@ public class World
 	{
 		background = new Image("pics/background.png");
 		ground = new Rectangle(0,500,1024,140);
+		border = new Rectangle(1024,0,1,640);
 	}
 	
 	public void render(Graphics g)
@@ -38,5 +40,10 @@ public class World
 	public Rectangle getGround()
 	{
 		return ground;
+	}
+	
+	public Rectangle getWall()
+	{
+		return border;
 	}
 }

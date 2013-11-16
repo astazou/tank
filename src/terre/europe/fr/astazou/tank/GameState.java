@@ -40,7 +40,6 @@ public class GameState extends BasicGameState
 		target2.render(g);
 		target3.render(g);
 		
-		
 	}
 
 	@Override
@@ -88,12 +87,12 @@ public class GameState extends BasicGameState
 			this.target3.parachute();
 		}
 		
-		/*
-		if(tank.getBomb().intersects(world.getGround()))
+		
+		if(tank.getBullet().intersects(world.getGround()) || tank.getBullet().intersects(world.getWall()))
 		{
-			tank.setBombDestroyed(true);
+			tank.setBombDestroyed();
 		}
-		*/
+		
 	}
 
 	@Override
