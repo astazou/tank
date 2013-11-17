@@ -1,9 +1,13 @@
 package terre.europe.fr.astazou.tank;
 
+import java.awt.Font;
+
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -15,6 +19,8 @@ public class GameState extends BasicGameState
 	private Tank tank;
 	private Input input;
 	private Target target1,target2,target3;
+	private TrueTypeFont forceWind, angle, reloading, fireCount;
+	private Font font;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException 
@@ -29,6 +35,11 @@ public class GameState extends BasicGameState
 		target2.init();
 		target3 = new Target(950,300);
 		target3.init();
+		font = new Font("Verdana", 0, 30);
+		forceWind = new TrueTypeFont(font,true);
+		angle = new TrueTypeFont(font,true);
+		reloading = new TrueTypeFont(font, true);
+		fireCount = new TrueTypeFont(font, true);
 	}
 
 	@Override
@@ -39,6 +50,19 @@ public class GameState extends BasicGameState
 		target1.render(g);
 		target2.render(g);
 		target3.render(g);
+		forceWind.drawString(20, 550, "Wind : "+tank.getWind(), Color.white);
+		angle.drawString(20, 590, "Angle : "+tank.getAngle(), Color.white);
+		if((tank.getFired() == false) && (tank.getPara()==false))
+		{
+			reloading.drawString(20, 510, "Loaded, you can fire.", Color.green);
+		}
+		else
+		{
+			reloading.drawString(20, 510, "Reloading...", Color.red);
+		}
+		
+		fireCount.drawString(20, 20, "Number of shot : "+ tank.getNumberShot().toString(), Color.black);
+		
 		
 	}
 

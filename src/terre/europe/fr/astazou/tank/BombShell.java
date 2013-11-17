@@ -96,7 +96,7 @@ public class BombShell
 	
 	public void createAnimation() throws SlickException  
     {  
-         explosionSheet = new SpriteSheet("pics/explosion.png", 40,40);   
+         explosionSheet = new SpriteSheet("pics/boom.png", 40,40);   
          explosion = new Animation( explosionSheet, 0,0,1,1,false, 50, true);  
          for (int i=0;i < 2;i++)  
          {  

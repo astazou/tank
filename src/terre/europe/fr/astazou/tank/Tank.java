@@ -27,6 +27,7 @@ public class Tank
 	private Circle bullet;
 	private Wind wind;
 	private Boolean alreadyDestroyed;
+	private Integer numberShot;
 	
 	public Tank(Input input)
 	{
@@ -57,6 +58,7 @@ public class Tank
 		this.bombShell.fire(bombX, bombY);
 		this.bullet = bombShell.getBound();
 		this.alreadyDestroyed = new Boolean(false);
+		this.numberShot = 0;
 	}
 	
 	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException
@@ -110,7 +112,7 @@ public class Tank
 			}
 		}
 		
-		else if ((input.isKeyDown(Keyboard.KEY_SPACE))&&(this.noRepeat==false))
+		else if ((input.isKeyDown(Keyboard.KEY_SPACE))&&(this.noRepeat==false)&&(this.parachute==false))
 		{
 			this.noRepeat=true;
 			this.alreadyDestroyed = false;
@@ -122,6 +124,7 @@ public class Tank
 			this.speedY=4;
 			this.direction=canon.getAngle();
 			this.fired=true;
+			this.numberShot++;
 			
 		}
 		bound.setLocation(x, y);
@@ -192,5 +195,29 @@ public class Tank
 		this.alreadyDestroyed = true;
 	}
 	
+	public float getWind()
+	{
+		return this.wind.getForce();
+	}
+	
+	public float getAngle()
+	{
+		return this.canon.getAngle();
+	}
+	
+	public Boolean getFired()
+	{
+		return this.noRepeat;
+	}
+	
+	public Integer getNumberShot()
+	{
+		return this.numberShot;
+	}
+	
+	public Boolean getPara()
+	{
+		return this.parachute;
+	}
 
 }
